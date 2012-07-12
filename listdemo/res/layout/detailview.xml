@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <Button
+        android:id="@+id/download_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:drawableRight="@drawable/cloud_download"
+        android:text="下载"
+        />
+
+    <ImageSwitcher
+        android:id="@+id/imageSwitcher1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/download_btn" >
+    </ImageSwitcher>
+
+    <Gallery
+        android:id="@+id/gallery1"
+        android:layout_width="fill_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:background="#38ffffff"
+        android:unselectedAlpha="0.8" />
+
+    <Button
+        android:id="@+id/forward"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/gallery1"
+        android:layout_alignParentRight="true"
+        android:drawableRight="@drawable/arrow_right"
+        android:text="下一张" />
+
+    <Button
+        android:id="@+id/backward"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/gallery1"
+        android:layout_alignParentLeft="true"
+        android:drawableLeft="@drawable/arrow_left"
+        android:text="上一张" />
+
+
+
+</RelativeLayout>

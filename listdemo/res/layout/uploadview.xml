@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <Button
+        android:id="@+id/select_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableRight="@drawable/folder_fill"
+        android:drawablePadding="10dp"
+        android:text="从相册选择图片" />
+
+    <EditText
+        android:id="@+id/image_path"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" 
+        android:editable="false">
+    </EditText>
+    <Button
+        android:id="@+id/up_confirm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableRight="@drawable/check_alt"
+        android:drawablePadding="10dp"
+        android:text="确认上传" />
+
+    <ImageView
+        android:id="@+id/selectedImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/babyicon" />
+</LinearLayout>
