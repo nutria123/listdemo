@@ -1,6 +1,5 @@
 package list.pack;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -19,11 +18,23 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class LogonActivity extends Activity {
+import com.baidu.mapapi.BMapManager;
+import com.baidu.mapapi.GeoPoint;
+import com.baidu.mapapi.MKEvent;
+import com.baidu.mapapi.MKGeneralListener;
+import com.baidu.mapapi.MapActivity;
+import com.baidu.mapapi.MapController;
+import com.baidu.mapapi.MapView;
+
+public class LogonActivity extends MapActivity {
 	static final int Logon_fail = 1;
 	static final int Logon_suc = 2;
 	private EditText loctext = null;
 	private LocationManager locationManager;
+	private BMapManager mBMapMan = null;
+	private MapView mapView = null;
+	private MapController mCtrler = null;
+
 	public void onCreate(Bundle savedInstanceState) {
 		String username = null;
 		String password = null;
@@ -56,10 +67,24 @@ public class LogonActivity extends Activity {
 
 		Button locbutton = (Button) findViewById(R.id.btn_get_loc);
 		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		locationManager.requestLocationUpdates(
-				LocationManager.GPS_PROVIDER, 1000, 0, locationListener);
+		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+				1000, 0, locationListener);
 		locbutton.setOnClickListener(button_listener_loc);
+		mBMapMan = new BMapManager(this);
+		mBMapMan.init("564ED4715422B4A9DEBB0D923332F00F962BFBCB",
+				new MyGeneralListener());
+		mBMapMan.getLocationManager().setNotifyInternal(10, 5);
+
+		super.initMapActivity(mBMapMan);
+		mapView = (MapView) findViewById(R.id.bmapView);
+		mapView.setBuiltInZoomControls(true);
+
+		mCtrler = mapView.getController();
+		GeoPoint bloc = new GeoPoint((int) 39 * 1000000, (int) 120 * 1000000);
+		mCtrler.setCenter(bloc);
+		mCtrler.setZoom(12);
 	}
+
 	LocationListener locationListener = new LocationListener() {
 		public void onLocationChanged(Location loc) {
 			// TODO Auto-generated method stub
@@ -67,10 +92,14 @@ public class LogonActivity extends Activity {
 				Log.i(getClass().getName(),
 						"Location changed : Lat: " + loc.getLatitude()
 								+ " Lng: " + loc.getLongitude());
-				loctext.setText("Location changed : Lat: "
-						+ loc.getLatitude() + " Lng: "
-						+ loc.getLongitude());
+				loctext.setText("Location changed : Lat: " + loc.getLatitude()
+						+ " Lng: " + loc.getLongitude());
 			}
+			GeoPoint bloc = new GeoPoint((int) loc.getLatitude() * 1000000,
+					(int) loc.getLongitude() * 1000000);
+
+			mCtrler.setCenter(bloc);
+			mCtrler.animateTo(bloc);
 		}
 
 		public void onProviderDisabled(String arg0) {
@@ -135,27 +164,31 @@ public class LogonActivity extends Activity {
 				loctext.setText("GPS Location changed : Lat: "
 						+ location.getLatitude() + " Lng: "
 						+ location.getLongitude());
+				GeoPoint bloc = new GeoPoint((int) location.getLatitude() * 1000000,
+						(int) location.getLongitude() * 1000000);
+
+				mCtrler.setCenter(bloc);
+				mCtrler.animateTo(bloc);
 			}
-//			else{
-//				Log.i(getClass().getName(),"GPS Location equals null");
-//				locationManager.requestLocationUpdates(
-//						LocationManager.NETWORK_PROVIDER, 1000, 0, locationListener);
-//				location = locationManager
-//						.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-//				if (location != null) {
-//					Log.i(getClass().getName(),
-//							"Location changed : Lat: " + location.getLatitude()
-//									+ " Lng: " + location.getLongitude());
-//					loctext.setText("NETWORK Location changed : Lat: "
-//							+ location.getLatitude() + " Lng: "
-//							+ location.getLongitude());
-//				}
-				else
-				{
-					loctext.setText("GPS Location fetch failed ");					
-				}
-//			}
-			
+			// else{
+			// Log.i(getClass().getName(),"GPS Location equals null");
+			// locationManager.requestLocationUpdates(
+			// LocationManager.NETWORK_PROVIDER, 1000, 0, locationListener);
+			// location = locationManager
+			// .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+			// if (location != null) {
+			// Log.i(getClass().getName(),
+			// "Location changed : Lat: " + location.getLatitude()
+			// + " Lng: " + location.getLongitude());
+			// loctext.setText("NETWORK Location changed : Lat: "
+			// + location.getLatitude() + " Lng: "
+			// + location.getLongitude());
+			// }
+			else {
+				loctext.setText("GPS Location fetch failed ");
+			}
+			// }
+
 		}
 	};
 
@@ -186,4 +219,54 @@ public class LogonActivity extends Activity {
 		return null;
 	}
 
+	class MyGeneralListener implements MKGeneralListener {
+		public void onGetNetworkState(int iError) {
+			Log.d(getClass().getName(), "onGetNetworkState error is " + iError);
+			Toast.makeText(LogonActivity.this, "您的网络出错啦！", Toast.LENGTH_LONG)
+					.show();
+		}
+
+		public void onGetPermissionState(int iError) {
+			Log.d(getClass().getName(), "onGetPermissionState error is "
+					+ iError);
+			if (iError == MKEvent.ERROR_PERMISSION_DENIED) {
+				// 授权Key错误：
+				Toast.makeText(LogonActivity.this,
+						"请在BMapApiDemoApp.java文件输入正确的授权Key！", Toast.LENGTH_LONG)
+						.show();
+				// BMapApiDemoApp.mDemoApp.m_bKeyRight = false;
+			}
+		}
+	}
+
+	@Override
+	protected boolean isRouteDisplayed() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected void onDestroy() {
+		if (mBMapMan != null) {
+			mBMapMan.destroy();
+			mBMapMan = null;
+		}
+		super.onDestroy();
+	}
+
+	@Override
+	protected void onPause() {
+		if (mBMapMan != null) {
+			mBMapMan.stop();
+		}
+		super.onPause();
+	}
+
+	@Override
+	protected void onResume() {
+		if (mBMapMan != null) {
+			mBMapMan.start();
+		}
+		super.onResume();
+	}
 }
