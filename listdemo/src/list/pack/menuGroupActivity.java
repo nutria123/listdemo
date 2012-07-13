@@ -29,10 +29,10 @@ public class menuGroupActivity extends ActivityGroup {
 	                container.addView(getLocalActivityManager().startActivity(
 	                        "Module1",
 	                        new Intent(menuGroupActivity.this, ListShow.class)
-	                                .addFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT))
+	                                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
 	                        .getDecorView());
 	            }
-
+	            
 	        });
 
 	        // Ä£¿é2
@@ -41,9 +41,21 @@ public class menuGroupActivity extends ActivityGroup {
 	            public void onClick(View v) {
 	                container.removeAllViews();
 	                container.addView(getLocalActivityManager().startActivity(
-	                        "Module1",
+	                        "Module2",
 	                        new Intent(menuGroupActivity.this, LogonActivity.class)
-	                                .addFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT))
+	                                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
+	                        .getDecorView());
+	            }
+	        });
+	        
+	        Button btnGmapAct = (Button) findViewById(R.id.gmap_act_btn);
+	        btnGmapAct.setOnClickListener(new OnClickListener() {
+	            public void onClick(View v) {
+	                container.removeAllViews();
+	                container.addView(getLocalActivityManager().startActivity(
+	                        "Module3",
+	                        new Intent(menuGroupActivity.this, gmapActivity.class)
+	                                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
 	                        .getDecorView());
 	            }
 	        });

@@ -30,9 +30,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -40,17 +38,17 @@ import android.widget.Toast;
 
 public class ListShow extends ListActivity {
 	int MAXVIEWSIZE = 50;
-	private String htmlstring = new String();
-	private String path = new String();
+
 	private static String sessionid = null;
-	private boolean boo=true;
+	private boolean boo = true;
 	List<ImageAndText> data = new ArrayList<ImageAndText>();
 	private PopupWindow popupWindow;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Bundle Extra = getIntent().getExtras();
-		
+
 		if (Extra != null) {
 			sessionid = Extra.getString("this_sessionId");
 		}
@@ -137,7 +135,7 @@ public class ListShow extends ListActivity {
 		@Override
 		protected ArrayList<ImageAndText> doInBackground(String... params) {
 
-			// pdialog.setCancelable(true);
+			 pdialog.setCancelable(true);
 			Log.i(getClass().getName(), "GetListTask准备进入prepareListData");
 			prepareListData();
 			Log.i(getClass().getName(), "GetListTask 运行 prepareListData完成");
@@ -148,7 +146,7 @@ public class ListShow extends ListActivity {
 		protected void onCancelled() {
 
 			// TODO Auto-generated method stub
-
+			pdialog.dismiss();
 			super.onCancelled();
 
 		}
@@ -277,10 +275,10 @@ public class ListShow extends ListActivity {
 				startActivity(intent);
 				return;
 			}
-			Toast suc_toast = Toast.makeText(ListShow.this, "登录成功",
-					Toast.LENGTH_LONG);
-			suc_toast.setGravity(Gravity.CENTER, 0, 0);
-			suc_toast.show();
+			// Toast suc_toast = Toast.makeText(ListShow.this, "登录成功",
+			// Toast.LENGTH_LONG);
+			// suc_toast.setGravity(Gravity.CENTER, 0, 0);
+			// suc_toast.show();
 			Log.i(getClass().getName(), "Logon成功,sessionid=" + sessionid);
 		}
 	}
@@ -348,45 +346,48 @@ public class ListShow extends ListActivity {
 				imageView.setMaxHeight(80);
 				imageView.setMaxWidth(80);
 				imageView.setPadding(8, 8, 8, 8);
-                
+
 				imageView.setOnClickListener(new OnClickListener() {
 					public void onClick(View v) {
 						// TODO Auto-generated method stub
-						Log.i(getClass().getName(),"PopMenu init");
-						
-						if(boo)
-						{
-						View contentViewMenu = LayoutInflater.from(getApplicationContext())
-									.inflate(R.layout.grid_popmenu, null); 
-//						LinearLayout menuGridView = (LinearLayout) View.inflate(
-//								ListShow.this, R.layout.grid_popmenu, null);
-						popupWindow = new PopupWindow(
-								contentViewMenu,200,100);
-						// 为弹出框设定自定义的布局
-						popupWindow.setContentView(contentViewMenu);
+						Log.i(getClass().getName(), "PopMenu init");
 
-						popupWindow.setFocusable(true);
-						popupWindow.showAsDropDown(v);
-						Button bt_open=(Button)contentViewMenu.findViewById(R.id.btn_open);
-						bt_open.setOnClickListener(new Button.OnClickListener(){
-							public void onClick(View btv) {
-								// TODO Auto-generated method stub
-								popupWindow.dismiss();
-								boo=true;
-							}} );
-						Button bt_close=(Button)contentViewMenu.findViewById(R.id.btn_close);
-						bt_close.setOnClickListener(new Button.OnClickListener(){
-							public void onClick(View btv) {
-								// TODO Auto-generated method stub
-								popupWindow.dismiss();
-								boo=true;
-							}} );
-						boo=false;
-						}
-						else
-						{
+						if (boo) {
+							View contentViewMenu = LayoutInflater.from(
+									getApplicationContext()).inflate(
+									R.layout.grid_popmenu, null);
+							// LinearLayout menuGridView = (LinearLayout)
+							// View.inflate(
+							// ListShow.this, R.layout.grid_popmenu, null);
+							popupWindow = new PopupWindow(contentViewMenu, 200,
+									100);
+							// 为弹出框设定自定义的布局
+							popupWindow.setContentView(contentViewMenu);
+
+							popupWindow.setFocusable(true);
+							popupWindow.showAsDropDown(v);
+							Button bt_open = (Button) contentViewMenu
+									.findViewById(R.id.btn_open);
+							bt_open.setOnClickListener(new Button.OnClickListener() {
+								public void onClick(View btv) {
+									// TODO Auto-generated method stub
+									popupWindow.dismiss();
+									boo = true;
+								}
+							});
+							Button bt_close = (Button) contentViewMenu
+									.findViewById(R.id.btn_close);
+							bt_close.setOnClickListener(new Button.OnClickListener() {
+								public void onClick(View btv) {
+									// TODO Auto-generated method stub
+									popupWindow.dismiss();
+									boo = true;
+								}
+							});
+							boo = false;
+						} else {
 							popupWindow.dismiss();
-							boo=true;
+							boo = true;
 						}
 					}
 				});

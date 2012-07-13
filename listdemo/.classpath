@@ -3,13 +3,8 @@
 	<classpathentry excluding="list/pack/backupOfDetailActivity.java|list/pack/backupOfUploadActivity.java|list/pack/backupOfListImageAdapter.java" kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
-	<classpathentry kind="lib" path="C:/downloads/Android/jsoup-1.6.1.jar"/>
-	<classpathentry kind="lib" path="C:/downloads/Android/httpcomponents-client-4.2-bin/httpcomponents-client-4.2/lib/httpmime-4.2.jar"/>
+	<classpathentry kind="lib" path="libs/jsoup-1.6.3.jar"/>
+	<classpathentry kind="lib" path="libs/httpmime-4.2.jar"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
-	<classpathentry kind="lib" path="C:/Program Files/Android/android-sdk/platforms/android-10/android.jar">
-		<accessrules>
-			<accessrule kind="nonaccessible" pattern="com/android/internal/**"/>
-		</accessrules>
-	</classpathentry>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

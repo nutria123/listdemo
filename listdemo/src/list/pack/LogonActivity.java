@@ -1,5 +1,6 @@
 package list.pack;
 
+import android.app.ActivityGroup;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -14,8 +15,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.baidu.mapapi.BMapManager;
@@ -80,7 +83,7 @@ public class LogonActivity extends MapActivity {
 		mapView.setBuiltInZoomControls(true);
 
 		mCtrler = mapView.getController();
-		GeoPoint bloc = new GeoPoint((int) 39 * 1000000, (int) 120 * 1000000);
+		GeoPoint bloc = new GeoPoint(40057031, 116307852);
 		mCtrler.setCenter(bloc);
 		mCtrler.setZoom(12);
 	}
@@ -126,29 +129,37 @@ public class LogonActivity extends MapActivity {
 			NetTool nt = new NetTool();
 			String sessionid = nt.Logon(getString(R.string.login_url)
 					.toString(), username, password);
-
+			SharedPreferences.Editor nameeditor = getSharedPreferences(
+					"babytreeID", android.content.Context.MODE_WORLD_WRITEABLE)
+					.edit();
+			nameeditor.putString("username", username);
+			nameeditor.putString("password", password);
+			nameeditor.commit();
 			if (sessionid == null || !sessionid.contains("L")) {
 				showDialog(Logon_fail);
 				Log.e(getClass().getName(), "µÇÂ¼Ê§°Ü");
-
 			} else {
 				Log.i(getClass().getName(), "sessionid=" + sessionid);
-				SharedPreferences.Editor nameeditor = getSharedPreferences(
-						"babytreeID",
-						android.content.Context.MODE_WORLD_WRITEABLE).edit();
-				nameeditor.putString("username", username);
-				nameeditor.putString("password", password);
-				nameeditor.commit();
+
 				Toast toast = Toast.makeText(getApplicationContext(), "µÇÂ½³É¹¦",
 						Toast.LENGTH_LONG);
 				toast.setGravity(Gravity.CENTER, 0, 0);
 				toast.show();
+				// Intent intent = new Intent();
+				// intent.setClass(LogonActivity.this, ListShow.class);
+				// intent.putExtra("this_sessionId", sessionid);
+				// startActivity(intent);
+				LinearLayout container = (LinearLayout) ((ActivityGroup) getParent())
+						.getWindow().findViewById(R.id.scroll_container);
+				container.removeAllViews();
+
 				Intent intent = new Intent();
 				intent.setClass(LogonActivity.this, ListShow.class);
 				intent.putExtra("this_sessionId", sessionid);
-				// startActivityForResult(intent, MAXVIEWSIZE);
-				startActivity(intent);
-				// finish();
+				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				Window subActivity = ((ActivityGroup) LogonActivity.this.getParent())
+						.getLocalActivityManager().startActivity("Module1", intent);
+				container.addView(subActivity.getDecorView());
 			}
 		}
 	};
@@ -164,7 +175,8 @@ public class LogonActivity extends MapActivity {
 				loctext.setText("GPS Location changed : Lat: "
 						+ location.getLatitude() + " Lng: "
 						+ location.getLongitude());
-				GeoPoint bloc = new GeoPoint((int) location.getLatitude() * 1000000,
+				GeoPoint bloc = new GeoPoint(
+						(int) location.getLatitude() * 1000000,
 						(int) location.getLongitude() * 1000000);
 
 				mCtrler.setCenter(bloc);
